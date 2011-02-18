@@ -30,6 +30,9 @@
 %% API
 %% ====================================================================
 
+new({bin_to_base64, InputGen}, Id) ->
+    Gen = new(InputGen, Id),
+    fun() -> base64:encode(Gen()) end;
 new({fixed_bin, Size}, _Id) ->
     Source = init_source(),
     fun() -> data_block(Source, Size) end;
