@@ -54,17 +54,17 @@ new(Id) ->
     application:start(ibrowse),
 
     %% The IPs, port and path we'll be testing
-    Ips  = basho_bench_config:get(http_raw_ips, ["127.0.0.1"]),
-    Port = basho_bench_config:get(http_raw_port, 8098),
-    Path = basho_bench_config:get(http_raw_path, "/riak/test"),
-    Params = basho_bench_config:get(http_raw_params, ""),
-    Disconnect = basho_bench_config:get(http_raw_disconnect_frequency, infinity),
+    Ips  = basho_bench_config:get(http_ips, ["127.0.0.1"]),
+    Port = basho_bench_config:get(http_port, 80),
+    Path = basho_bench_config:get(http_path, ""),
+    Params = basho_bench_config:get(http_params, ""),
+    Disconnect = basho_bench_config:get(http_disconnect_frequency, infinity),
 
     case Disconnect of
         infinity -> ok;
         Seconds when is_integer(Seconds) -> ok;
         {ops, Ops} when is_integer(Ops) -> ok;
-        _ -> ?FAIL_MSG("Invalid configuration for http_raw_disconnect_frequency: ~p~n", [Disconnect])
+        _ -> ?FAIL_MSG("Invalid configuration for http_disconnect_frequency: ~p~n", [Disconnect])
     end,
 
     %% Uses pdict to avoid threading state record through lots of functions
@@ -263,7 +263,7 @@ send_request(_Url, _Headers, _Method, _Body, _Options, 0) ->
     {error, max_retries};
 send_request(Url, Headers, Method, Body, Options, Count) ->
     Pid = connect(Url),
-    case catch(ibrowse_http_client:send_req(Pid, Url, Headers, Method, Body, Options, basho_bench_config:get(http_raw_request_timeout, 5000))) of
+    case catch(ibrowse_http_client:send_req(Pid, Url, Headers, Method, Body, Options, basho_bench_config:get(http_request_timeout, 5000))) of
         {ok, Status, RespHeaders, RespBody} ->
             maybe_disconnect(Url),
             {ok, Status, RespHeaders, RespBody};
