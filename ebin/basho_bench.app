@@ -6,6 +6,7 @@
              basho_bench_app,
              basho_bench_config,
              basho_bench_driver_dets,
+             basho_bench_driver_http,
              basho_bench_driver_http_raw,
              basho_bench_driver_innostore,
              basho_bench_driver_riakc_pb,
